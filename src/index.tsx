@@ -1,9 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Users from "./pages/Users";
-import Publications from "./pages/Publications";
+import Users from "./pages/Users/Users";
+import Publications from "./pages/Publication/Publications";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -12,10 +11,6 @@ const root = ReactDOM.createRoot(
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />
-  },
-  {
-    path: "/users",
     element: < Users/>
   },
   {
