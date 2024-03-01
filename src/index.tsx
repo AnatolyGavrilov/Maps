@@ -11,16 +11,16 @@ const root = ReactDOM.createRoot(
 const router = createBrowserRouter([
   {
     path: "/",
-    element: < Users/>
+    element: <Users />,
   },
   {
     path: "/publications",
-    element: < Publications/>
+    element: <Publications />,
   },
 ]);
 
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router}/>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
