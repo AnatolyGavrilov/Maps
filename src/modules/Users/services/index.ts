@@ -15,7 +15,7 @@ export const getUsersThunk = createAsyncThunk<any>(
         cache: new InMemoryCache(),
       });
 
-      const data = client.query({
+      const { data } = await client.query({
         query: gql`
           query ($options: PageQueryOptions) {
             users(options: $options) {
@@ -50,7 +50,7 @@ export const getUsersThunk = createAsyncThunk<any>(
         `,
       });
 
-      return data;
+      return data.users.data;
     } catch (error) {
       // const errorObject = HandleError(error);
       // return rejectWithValue(errorObject);
