@@ -6,54 +6,55 @@ import { Api } from "enum";
 import { HandleError } from "common/utils/handleError";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 
-export const getUsersThunk = createAsyncThunk<any>(
-  "application/get",
-  async () => {
-    try {
-      const client = new ApolloClient({
-        uri: "https://graphqlzero.almansi.me/api", //link to our fake server
-        cache: new InMemoryCache(),
-      });
+export const getUsersThunk = createAsyncThunk<
+  IUser[],
+  void,
+  { rejectValue: ErrorMessageType }
+>("application/get", async (_, { rejectWithValue }) => {
+  try {
+    const client = new ApolloClient({
+      uri: "https://graphqlzero.almansi.me/api", //link to our fake server
+      cache: new InMemoryCache(),
+    });
 
-      const { data } = await client.query({
-        query: gql`
-          query ($options: PageQueryOptions) {
-            users(options: $options) {
-              data {
-                id
-                name
-                username
-                email
-                address {
-                  street
-                  suite
-                  city
-                  zipcode
-                  geo {
-                    lat
-                    lng
-                  }
-                }
-                phone
-                website
-                company {
-                  name
-                  catchPhrase
-                  bs
+    const { data } = await client.query({
+      query: gql`
+        query ($options: PageQueryOptions) {
+          users(options: $options) {
+            data {
+              id
+              name
+              username
+              email
+              address {
+                street
+                suite
+                city
+                zipcode
+                geo {
+                  lat
+                  lng
                 }
               }
-              meta {
-                totalCount
+              phone
+              website
+              company {
+                name
+                catchPhrase
+                bs
               }
             }
+            meta {
+              totalCount
+            }
           }
-        `,
-      });
+        }
+      `,
+    });
 
-      return data.users.data;
-    } catch (error) {
-      // const errorObject = HandleError(error);
-      // return rejectWithValue(errorObject);
-    }
+    return data.users.data;
+  } catch (error) {
+    const errorObject = HandleError(error);
+    return rejectWithValue(errorObject);
   }
-);
+});
