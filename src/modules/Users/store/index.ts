@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { IUsersInitialState } from "../types";
 import { getUsersThunk } from "../services";
 
-const initialState: IUsersInitialState = {
+const initialState: any = {
   users: [],
 };
 
