@@ -1,22 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { IUsersInitialState } from "../types";
+import { getUsersThunk } from "../services";
 
 const initialState: IUsersInitialState = {
   users: [],
 };
 
 const usersSlice = createSlice({
-  name: "applications",
+  name: "users",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getAplicationsThunk.fulfilled, (state, { payload }) => {
-      state.applications = payload;
+    builder.addCase(getUsersThunk.fulfilled, (state, { payload }) => {
+      state.users = payload;
     });
   },
 });
 
-export const { closeSuccessfulRegistrationModal } = userSlice.actions;
-
-export default userSlice.reducer;
+export default usersSlice.reducer;
