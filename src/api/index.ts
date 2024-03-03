@@ -1,6 +1,6 @@
-import axios from "axios";
-import { BASE_URL } from "../constants";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 
-export const configuredAxios = axios.create({
-  baseURL: BASE_URL,
+export const client = new ApolloClient({
+  uri: "https://graphqlzero.almansi.me/api",
+  cache: new InMemoryCache(),
 });

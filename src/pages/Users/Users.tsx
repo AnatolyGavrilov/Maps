@@ -1,5 +1,6 @@
 import { useAppDispatch } from "hooks/useAppDispatch";
 import { useAppSelector } from "hooks/useAppSelector";
+import UserList from "modules/Users/components/UsersList/UsersList";
 import { getUsersThunk } from "modules/Users/services";
 import { useEffect } from "react";
 
@@ -13,7 +14,12 @@ const Users = () => {
 
   console.log("users", users);
 
-  return <div>Страница юзеров</div>;
+  return (
+    <div>
+      Страница юзеров
+      <UserList users={users} />
+    </div>
+  );
 };
 
 export default Users;

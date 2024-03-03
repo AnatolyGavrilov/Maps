@@ -1,10 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IUser } from "../types";
 import { ErrorMessageType } from "types";
-import { configuredAxios } from "api";
-import { Api } from "enum";
 import { HandleError } from "common/utils/handleError";
-import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
+import { client } from "api";
+import { usersRequest } from "api/users/usersGet";
 
 export const getUsersThunk = createAsyncThunk<
   IUser[],
@@ -12,45 +11,7 @@ export const getUsersThunk = createAsyncThunk<
   { rejectValue: ErrorMessageType }
 >("application/get", async (_, { rejectWithValue }) => {
   try {
-    const client = new ApolloClient({
-      uri: "https://graphqlzero.almansi.me/api", //link to our fake server
-      cache: new InMemoryCache(),
-    });
-
-    const { data } = await client.query({
-      query: gql`
-        query ($options: PageQueryOptions) {
-          users(options: $options) {
-            data {
-              id
-              name
-              username
-              email
-              address {
-                street
-                suite
-                city
-                zipcode
-                geo {
-                  lat
-                  lng
-                }
-              }
-              phone
-              website
-              company {
-                name
-                catchPhrase
-                bs
-              }
-            }
-            meta {
-              totalCount
-            }
-          }
-        }
-      `,
-    });
+    const { data } = await client.query(usersRequest);
 
     return data.users.data;
   } catch (error) {
