@@ -30,7 +30,7 @@ const Users = () => {
         label={FormControlLabelValue}
         onClick={handleClickToSwitch}
       />
-      {isMap ? <UsersMap /> : <UserList users={users} />}
+      {isMap ? <UsersMap users={users} /> : <UserList users={users} />}
     </div>
   );
 };

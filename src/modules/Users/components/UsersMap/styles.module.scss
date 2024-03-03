@@ -1,0 +1,26 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 700px;
+    height: 520px;
+    padding: 24px;
+    border: 1px solid #ededed;
+    border-radius: 8px;
+  }
+  
+  .title {
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 32px;
+  }
+  
+  
+  .balloon_content__field {
+    word-break: break-all;
+    max-width: 200px;
+  }
+  
+  .field_name {
+    font-weight: 500;
+  }
