@@ -4,19 +4,30 @@ import ListItem from "@mui/material/ListItem";
 import { IUserListProps } from "./UserList.types";
 import { ListItemText } from "@mui/material";
 import styles from "./styles.module.scss";
+import { useNavigate } from "react-router-dom";
 
 const UserList: FC<IUserListProps> = ({ users }) => {
+  const navigate = useNavigate();
+
+  const handleClickNavigateToPublications = (id: string) => {
+    navigate(`publications/${id}`);
+  };
+
   return (
     <div>
       <h1>Список пользователей</h1>
       <List>
         {users.map((user) => (
-          <ListItem key={user.id} className={styles.item}>
+          <ListItem
+            onClick={(e) => handleClickNavigateToPublications(user.id)}
+            key={user.id}
+            className={styles.item}
+          >
             <ListItemText className={styles.itemText}>
               {user.name} {user.username}
             </ListItemText>
             <ListItemText className={styles.itemText}>
-              {user.email}{" "}
+              {user.email}
             </ListItemText>
             <ListItemText className={styles.itemText}>
               {user.phone}

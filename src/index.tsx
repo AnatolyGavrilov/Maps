@@ -16,7 +16,7 @@ const router = createBrowserRouter([
     element: <Users />,
   },
   {
-    path: "/publications",
+    path: "/publications/:userId",
     element: <Publications />,
   },
 ]);
