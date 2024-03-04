@@ -6,14 +6,18 @@ import { useEffect } from "react";
 
 const Publications = () => {
   const dispatch = useAppDispatch();
-  const publications = useAppSelector((state) => state.publications);
+  const publications = useAppSelector((state) => state.publications.publications);
 
   useEffect(() => {
     dispatch(getPublicationsThunk());
   }, []);
 
-  console.log(publications);
-  return <div><PublicationsList publications={publications}/></div>;
+  // console.log(publications);
+  return (
+    <div>
+      <PublicationsList publications={publications} />
+    </div>
+  );
 };
 
 export default Publications;

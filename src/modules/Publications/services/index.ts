@@ -12,7 +12,7 @@ export const getPublicationsThunk = createAsyncThunk<
 >("application/get", async (_, { rejectWithValue }) => {
   try {
     const { data } = await client.query(publicationsGet);
-
+    console.log("data.user.posts.data", data.user.posts.data);
     return data.user.posts.data;
   } catch (error) {
     const errorObject = HandleError(error);

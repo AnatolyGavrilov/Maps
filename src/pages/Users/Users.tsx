@@ -19,7 +19,7 @@ const Users = () => {
     dispatch(getUsersThunk());
   }, [dispatch]);
 
-  console.log("users", users);
+  // console.log("users", users);
 
   const FormControlLabelValue = isMap ? "Карта" : "Список";
 
