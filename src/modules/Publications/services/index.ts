@@ -7,12 +7,12 @@ import { publicationsGet } from "api/publications/publicationsGet";
 
 export const getPublicationsThunk = createAsyncThunk<
   any,
-  void,
+  any,
   { rejectValue: ErrorMessageType }
->("application/get", async (_, { rejectWithValue }) => {
+>("application/get", async (userId, { rejectWithValue }) => {
   try {
-    const { data } = await client.query(publicationsGet);
-    console.log("data.user.posts.data", data.user.posts.data);
+    const { data } = await client.query(publicationsGet(userId));
+    // console.log("data.user.posts.data", data.user.posts.data);
     return data.user.posts.data;
   } catch (error) {
     const errorObject = HandleError(error);

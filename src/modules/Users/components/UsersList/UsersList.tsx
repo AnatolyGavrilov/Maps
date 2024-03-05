@@ -24,19 +24,19 @@ const UserList: FC<IUserListProps> = ({ users }) => {
             className={styles.item}
           >
             <ListItemText className={styles.itemText}>
-              {user.name} {user.username}
+              {user?.name} {user?.username}
             </ListItemText>
             <ListItemText className={styles.itemText}>
-              {user.email}
+              {user?.email}
             </ListItemText>
             <ListItemText className={styles.itemText}>
-              {user.phone}
+              {user?.phone}
             </ListItemText>
             <ListItemText className={styles.itemText}>
-              {user.address.city} {user.address.street} {user.address.suite}
+              {user?.address?.city} {user?.address?.street} {user?.address?.suite}
             </ListItemText>
             <ListItemText className={styles.itemText}>
-              {user.company.name} {user.company.catchPhrase} {user.company.bs}
+              {user?.company?.name} {user?.company?.catchPhrase} {user?.company?.bs}
             </ListItemText>
           </ListItem>
         ))}
