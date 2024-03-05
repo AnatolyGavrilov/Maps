@@ -14,7 +14,6 @@ import {
 const PublicationsList: FC<IPublicationsProps> = ({ publications }) => {
   return (
     <div>
-      <h1>Публикации пользователя</h1>
       <div className={styles.cardsList}>
         {publications.map((publication) => (
           <Card sx={{ maxWidth: 345 }} key={publication.id}>
