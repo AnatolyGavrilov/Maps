@@ -13,8 +13,10 @@ const Publications = () => {
   const { userId } = useParams();
 
   useEffect(() => {
-    dispatch(getPublicationsThunk(userId));
-  }, []);
+    if (userId) {
+      dispatch(getPublicationsThunk(userId));
+    }
+  }, [dispatch, userId]);
 
   return (
     <div>

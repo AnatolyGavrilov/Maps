@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getPublicationsThunk } from "../services";
+import { IPublicationInitialState } from "../types";
 
-const initialState: any = {
+const initialState: IPublicationInitialState = {
   publications: [],
 };
 

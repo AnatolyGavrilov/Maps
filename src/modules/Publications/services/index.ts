@@ -6,13 +6,13 @@ import { client } from "api";
 import { publicationsGet } from "api/publications/publicationsGet";
 
 export const getPublicationsThunk = createAsyncThunk<
-  any,
-  any,
+  IPublication[],
+  string,
   { rejectValue: ErrorMessageType }
 >("application/get", async (userId, { rejectWithValue }) => {
   try {
     const { data } = await client.query(publicationsGet(userId));
-    // console.log("data.user.posts.data", data.user.posts.data);
+
     return data.user.posts.data;
   } catch (error) {
     const errorObject = HandleError(error);

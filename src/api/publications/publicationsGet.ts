@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const publicationsGet = (userId: any) => {
+export const publicationsGet = (userId: string) => {
   return {
     query: gql`
       query {
