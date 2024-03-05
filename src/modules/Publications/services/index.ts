@@ -19,3 +19,18 @@ export const getPublicationsThunk = createAsyncThunk<
     return rejectWithValue(errorObject);
   }
 });
+
+export const createPublicationThunk = createAsyncThunk<
+  any,
+  any,
+  { rejectValue: ErrorMessageType }
+>("application/get", async (userId, { rejectWithValue }) => {
+  try {
+    const { data } = await client.query(publicationsGet(userId));
+
+    return data.user.posts.data;
+  } catch (error) {
+    const errorObject = HandleError(error);
+    return rejectWithValue(errorObject);
+  }
+});

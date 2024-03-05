@@ -16,3 +16,17 @@ export const publicationsGet = (userId: string) => {
     `,
   };
 };
+
+export const publicationsCreate = () => {
+  return {
+    query: gql`
+      mutation ($input: CreatePostInput!) {
+        createPost(input: $input) {
+          id
+          title
+          body
+        }
+      }
+    `,
+  };
+};
