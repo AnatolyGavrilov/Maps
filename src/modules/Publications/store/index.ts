@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getPublicationsThunk } from "../services";
+import { createPublicationThunk, getPublicationsThunk } from "../services";
 import { IPublicationInitialState } from "../types";
 
 const initialState: IPublicationInitialState = {
@@ -13,6 +13,9 @@ const usersSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getPublicationsThunk.fulfilled, (state, { payload }) => {
       state.publications = payload;
+    });
+    builder.addCase(createPublicationThunk.fulfilled, (state, { payload }) => {
+      state.publications = [payload, ...state.publications];
     });
   },
 });

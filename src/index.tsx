@@ -5,11 +5,13 @@ import Users from "./pages/Users/Users";
 import Publications from "./pages/Publications/Publications";
 import { Provider } from "react-redux";
 import { rootStore } from "store";
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
-
+loadDevMessages();
+loadErrorMessages();
 const router = createBrowserRouter([
   {
     path: "/",

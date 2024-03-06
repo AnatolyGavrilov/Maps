@@ -21,7 +21,7 @@ export const publicationsCreate = () => {
   return {
     query: gql`
       mutation ($input: CreatePostInput!) {
-        createPost(input: $input) {
+        createPost(input: { title: "test", body: "jest" }) {
           id
           title
           body
