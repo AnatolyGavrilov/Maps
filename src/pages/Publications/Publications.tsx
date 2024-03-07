@@ -1,34 +1,26 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
-import { useAppDispatch } from "hooks/useAppDispatch";
-import { useAppSelector } from "hooks/useAppSelector";
 import PublicationsList from "modules/Publications/components/PublicationsList/PublicationsList";
-import {
-  createPublicationThunk,
-  getPublicationsThunk,
-} from "modules/Publications/services";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./styles.module.scss";
 import { client } from "api";
-import { publicationsCreate } from "api/publications/publicationsGet";
-import { gql } from "@apollo/client";
+import {
+  GET_PUBLICATIONS,
+  publicationsCreate,
+} from "api/publications/publications";
+import { gql, useQuery } from "@apollo/client";
 
 const Publications = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const dispatch = useAppDispatch();
-  const publications = useAppSelector(
-    (state) => state.publications.publications
-  );
   const { userId } = useParams();
-
-  useEffect(() => {
-    if (userId) {
-      dispatch(getPublicationsThunk(userId));
-    }
-  }, [dispatch, userId]);
-
+  const { loading, error, data } = useQuery(GET_PUBLICATIONS, {
+    variables: { userId },
+  });
+  if (!loading) {
+    console.log(data);
+  }
   const MuiSxStyle = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -41,40 +33,19 @@ const Publications = () => {
     p: 4,
   };
 
-  const handleTestClick = async () => {
-    const data = await client.mutate({
-      mutation: gql`
-        mutation ($input: CreatePostInput!) {
-          createPost(input: { title: "test", body: "jest" }) {
-            variables: {
-              name: "testt"
-              title: "test"
-              body: "jest"
-            }
-            id
-            title
-            body
-          }
-        }
-      `,
-    });
-    console.log("inComponent", data);
-  };
-
   return (
     <div>
       <div className={styles.wrapper}>
         <h1>Публикации пользователя</h1>
         <Button
           // onClick={handleOpen}
-          onClick={handleTestClick}
           className={styles.addPublicationButton}
           variant="contained"
         >
           Добавить публикацию
         </Button>
       </div>
-      <PublicationsList publications={publications} />
+      {/* <PublicationsList publications={publications} /> */}
       <Modal
         open={open}
         onClose={handleClose}

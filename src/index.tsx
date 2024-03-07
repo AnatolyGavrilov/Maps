@@ -3,9 +3,8 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Users from "./pages/Users/Users";
 import Publications from "./pages/Publications/Publications";
-import { Provider } from "react-redux";
-import { rootStore } from "store";
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -23,10 +22,15 @@ const router = createBrowserRouter([
   },
 ]);
 
+export const client = new ApolloClient({
+  uri: "https://graphqlzero.almansi.me/api",
+  cache: new InMemoryCache(),
+});
+
 root.render(
   <React.StrictMode>
-    <Provider store={rootStore()}>
+    <ApolloProvider client={client}>
       <RouterProvider router={router} />
-    </Provider>
+    </ApolloProvider>
   </React.StrictMode>
 );
