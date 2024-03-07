@@ -6,7 +6,7 @@ import styles from "./styles.module.scss";
 import { client } from "api";
 import {
   GET_PUBLICATIONS,
-  publicationsCreate,
+  ADD_PUBLICATION,
 } from "api/publications/publications";
 import { gql, useQuery } from "@apollo/client";
 
@@ -33,19 +33,25 @@ const Publications = () => {
     p: 4,
   };
 
+  const publications = data?.user?.posts?.data;
+
   return (
     <div>
-      <div className={styles.wrapper}>
-        <h1>Публикации пользователя</h1>
-        <Button
-          // onClick={handleOpen}
-          className={styles.addPublicationButton}
-          variant="contained"
-        >
-          Добавить публикацию
-        </Button>
-      </div>
-      {/* <PublicationsList publications={publications} /> */}
+      {!loading && (
+        <div>
+          <div className={styles.wrapper}>
+            <h1>Публикации пользователя</h1>
+            <Button
+              // onClick={handleOpen}
+              className={styles.addPublicationButton}
+              variant="contained"
+            >
+              Добавить публикацию
+            </Button>
+          </div>
+          <PublicationsList publications={publications} />
+        </div>
+      )}
       <Modal
         open={open}
         onClose={handleClose}

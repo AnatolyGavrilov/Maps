@@ -13,16 +13,12 @@ export const GET_PUBLICATIONS = gql`
   }
 `;
 
-export const publicationsCreate = () => {
-  return {
-    query: gql`
-      mutation ($input: CreatePostInput!) {
-        createPost(input: { title: "test", body: "jest" }) {
-          id
-          title
-          body
-        }
-      }
-    `,
-  };
-};
+export const ADD_PUBLICATION = gql`
+  mutation ($title: !String, $body: !String) {
+    createPost(title: $title, ) {
+      id
+      title
+      body
+    }
+  }
+`;
