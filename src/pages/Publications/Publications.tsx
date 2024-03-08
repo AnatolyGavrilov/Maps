@@ -8,16 +8,30 @@ import {
   GET_PUBLICATIONS,
   ADD_PUBLICATION,
 } from "api/publications/publications";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 
 const Publications = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const { userId } = useParams();
   const { loading, error, data } = useQuery(GET_PUBLICATIONS, {
     variables: { userId },
   });
+  const [addPublication, { data: dataT, loading: loadingT, error: errorT }] =
+    useMutation(ADD_PUBLICATION);
+  const handleOpen = () => {
+    setOpen(true);
+    addPublication({
+      variables: {
+        input: {
+          title: "titleRef.current.value",
+          body: "bodyRef.current.value",
+        },
+      },
+    });
+  };
+  console.log(dataT);
+
   if (!loading) {
     console.log(data);
   }
@@ -42,7 +56,7 @@ const Publications = () => {
           <div className={styles.wrapper}>
             <h1>Публикации пользователя</h1>
             <Button
-              // onClick={handleOpen}
+              onClick={handleOpen}
               className={styles.addPublicationButton}
               variant="contained"
             >

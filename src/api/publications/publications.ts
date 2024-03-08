@@ -14,8 +14,8 @@ export const GET_PUBLICATIONS = gql`
 `;
 
 export const ADD_PUBLICATION = gql`
-  mutation ($title: !String, $body: !String) {
-    createPost(title: $title, ) {
+  mutation ($input: CreatePostInput!) {
+    createPost(input: $input) {
       id
       title
       body
