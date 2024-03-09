@@ -1,24 +1,37 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import PublicationsList from "modules/Publications/components/PublicationsList/PublicationsList";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./styles.module.scss";
-import { client } from "api";
 import {
   GET_PUBLICATIONS,
   ADD_PUBLICATION,
 } from "api/publications/publications";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
+import { MuiSxStyle } from "./MuiSxStyles";
 
 const Publications = () => {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const { userId } = useParams();
-  const { loading, error, data } = useQuery(GET_PUBLICATIONS, {
+  const {
+    loading,
+    error,
+    data: dataV,
+  } = useQuery(GET_PUBLICATIONS, {
     variables: { userId },
   });
   const [addPublication, { data: dataT, loading: loadingT, error: errorT }] =
-    useMutation(ADD_PUBLICATION);
+    useMutation(ADD_PUBLICATION, {
+      update(cache: any, { data: { createPost } }: any) {
+        const tes = cache.readQuery({
+          query: GET_PUBLICATIONS,
+          variables: { userId },
+        });
+        console.log(tes);
+      },
+    });
+
   const handleOpen = () => {
     setOpen(true);
     addPublication({
@@ -30,24 +43,8 @@ const Publications = () => {
       },
     });
   };
-  console.log(dataT);
-
-  if (!loading) {
-    console.log(data);
-  }
-  const MuiSxStyle = {
-    position: "absolute" as "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
-
-  const publications = data?.user?.posts?.data;
+  // console.log("dataT", dataT);
+  // console.log("data", data);
 
   return (
     <div>
@@ -63,7 +60,7 @@ const Publications = () => {
               Добавить публикацию
             </Button>
           </div>
-          <PublicationsList publications={publications} />
+          <PublicationsList publications={dataV?.user?.posts?.data} />
         </div>
       )}
       <Modal
