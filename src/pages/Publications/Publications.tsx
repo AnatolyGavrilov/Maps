@@ -11,32 +11,43 @@ import { useMutation, useQuery } from "@apollo/client";
 import { MuiSxStyle } from "./MuiSxStyles";
 
 const Publications = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const handleClose = () => setOpen(false);
+  const [title, setTitle] = useState<string>("");
+  const [body, setBody] = useState<string>("");
+  const titleHandler = (e: any) => {
+    setTitle(e?.target?.value);
+  };
+  const bodyHandler = (e: any) => {
+    setBody(e?.target?.value);
+  };
   const { userId } = useParams();
   const { loading, error, data } = useQuery(GET_PUBLICATIONS, {
     variables: { userId },
   });
-  const [addPublication, { data: dataT, loading: loadingT, error: errorT }] =
-    useMutation(ADD_PUBLICATION, {
-      update(cache: any, { data: { createPost } }: any) {
-        const publicationsCache = cache.readQuery({
-          query: GET_PUBLICATIONS,
-          variables: { userId },
-        });
-        cache.writeQuery({
-          query: GET_PUBLICATIONS,
-          data: {
-            user: {
-              posts: {
-                data: [createPost, ...publicationsCache.user.posts.data],
-              },
+  const sendForm = (e: any) => {
+    e.preventDefault();
+    console.log(title, body);
+  };
+  const [addPublication] = useMutation(ADD_PUBLICATION, {
+    update(cache: any, { data: { createPost } }: any) {
+      const publicationsCache = cache.readQuery({
+        query: GET_PUBLICATIONS,
+        variables: { userId },
+      });
+      cache.writeQuery({
+        query: GET_PUBLICATIONS,
+        data: {
+          user: {
+            posts: {
+              data: [createPost, ...publicationsCache.user.posts.data],
             },
           },
-          variables: { userId },
-        });
-      },
-    });
+        },
+        variables: { userId },
+      });
+    },
+  });
   console.log(data);
   const handleOpen = () => {
     setOpen(true);
@@ -73,12 +84,20 @@ const Publications = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={MuiSxStyle}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
+          <form onSubmit={sendForm}>
+            <p>Создать публикацию</p>
+            <input
+              value={title}
+              onChange={titleHandler}
+              className={styles.titleField}
+            ></input>
+            <input
+              value={body}
+              onChange={bodyHandler}
+              className={styles.bodyField}
+            ></input>
+            <button className={styles.formButton}>Создать</button>
+          </form>
         </Box>
       </Modal>
     </div>
