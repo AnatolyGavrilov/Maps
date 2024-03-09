@@ -14,24 +14,30 @@ const Publications = () => {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const { userId } = useParams();
-  const {
-    loading,
-    error,
-    data: dataV,
-  } = useQuery(GET_PUBLICATIONS, {
+  const { loading, error, data } = useQuery(GET_PUBLICATIONS, {
     variables: { userId },
   });
   const [addPublication, { data: dataT, loading: loadingT, error: errorT }] =
     useMutation(ADD_PUBLICATION, {
       update(cache: any, { data: { createPost } }: any) {
-        const tes = cache.readQuery({
+        const publicationsCache = cache.readQuery({
           query: GET_PUBLICATIONS,
           variables: { userId },
         });
-        console.log(tes);
+        cache.writeQuery({
+          query: GET_PUBLICATIONS,
+          data: {
+            user: {
+              posts: {
+                data: [createPost, ...publicationsCache.user.posts.data],
+              },
+            },
+          },
+          variables: { userId },
+        });
       },
     });
-
+  console.log(data);
   const handleOpen = () => {
     setOpen(true);
     addPublication({
@@ -43,9 +49,6 @@ const Publications = () => {
       },
     });
   };
-  // console.log("dataT", dataT);
-  // console.log("data", data);
-
   return (
     <div>
       {!loading && (
@@ -60,7 +63,7 @@ const Publications = () => {
               Добавить публикацию
             </Button>
           </div>
-          <PublicationsList publications={dataV?.user?.posts?.data} />
+          <PublicationsList publications={data?.user?.posts?.data} />
         </div>
       )}
       <Modal
