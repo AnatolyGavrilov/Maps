@@ -28,6 +28,14 @@ const Publications = () => {
   const sendForm = (e: any) => {
     e.preventDefault();
     console.log(title, body);
+    addPublication({
+      variables: {
+        input: {
+          title: title,
+          body: body,
+        },
+      },
+    });
   };
   const [addPublication] = useMutation(ADD_PUBLICATION, {
     update(cache: any, { data: { createPost } }: any) {
@@ -51,14 +59,6 @@ const Publications = () => {
   console.log(data);
   const handleOpen = () => {
     setOpen(true);
-    addPublication({
-      variables: {
-        input: {
-          title: "titleRef.current.value",
-          body: "bodyRef.current.value",
-        },
-      },
-    });
   };
   return (
     <div>
