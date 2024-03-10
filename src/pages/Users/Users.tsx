@@ -1,13 +1,13 @@
 import { FormControlLabel, Switch } from "@mui/material";
 import UserList from "modules/Users/components/UsersList/UsersList";
 import UsersMap from "modules/Users/components/UsersMap/UsersMap";
-import { useEffect, useState } from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useState } from "react";
+import { useQuery } from "@apollo/client";
 import { GET_USERS } from "api/users/users";
 
 const Users = () => {
   const [isMap, setIsMap] = useState<boolean>(false);
-  const { loading, error, data } = useQuery(GET_USERS);
+  const { loading, data } = useQuery(GET_USERS);
   const users = data?.users?.data;
   const handleClickToSwitch = () => {
     setIsMap(!isMap);

@@ -1,6 +1,6 @@
 import { Box, Button, Modal } from "@mui/material";
 import PublicationsList from "modules/Publications/components/PublicationsList/PublicationsList";
-import { ChangeEvent, FormEvent, FormEventHandler, useState } from "react";
+import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./styles.module.scss";
 import {
@@ -9,16 +9,14 @@ import {
 } from "api/publications/publications";
 import {
   ApolloCache,
-  DefaultContext,
-  MutationUpdaterFunction,
-  OperationVariables,
+  FetchResult,
   useMutation,
   useQuery,
 } from "@apollo/client";
 import { MuiSxStyle } from "./MuiSxStyles";
 import { IPublicationsCache } from "./Publications.types";
-
-const Publications = () => {
+import CircularProgress from "@mui/material/CircularProgress";
+export const Publications: FC = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [body, setBody] = useState<string>("");
@@ -26,16 +24,18 @@ const Publications = () => {
   const titleHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e?.target?.value);
   };
+
   const bodyHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setBody(e?.target?.value);
   };
 
   const { userId } = useParams();
-  const { loading, error, data } = useQuery(GET_PUBLICATIONS, {
+
+  const { loading, data } = useQuery(GET_PUBLICATIONS, {
     variables: { userId },
   });
 
-  function sendForm(e: FormEvent<HTMLFormElement>) {
+  const sendForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     addPublication({
       variables: {
@@ -46,26 +46,34 @@ const Publications = () => {
       },
     });
     handleModal();
-  }
+  };
 
   const [addPublication] = useMutation(ADD_PUBLICATION, {
-    update(cache: ApolloCache<IPublicationsCache | null>, { data: { createPost } }) {
+    update(
+      cache: ApolloCache<IPublicationsCache | null>,
+      {
+        data: { createPost },
+      }: Omit<
+        FetchResult<any, Record<string, any>, Record<string, any>>,
+        "context"
+      >
+    ) {
       const publicationsCache: IPublicationsCache | null = cache.readQuery({
         query: GET_PUBLICATIONS,
         variables: { userId },
       });
-      console.log("publicationsCache", publicationsCache);
-      publicationsCache && cache.writeQuery({
-        query: GET_PUBLICATIONS,
-        data: {
-          user: {
-            posts: {
-              data: [createPost, ...publicationsCache?.user.posts.data],
+      publicationsCache &&
+        cache.writeQuery({
+          query: GET_PUBLICATIONS,
+          data: {
+            user: {
+              posts: {
+                data: [createPost, ...publicationsCache?.user.posts.data],
+              },
             },
           },
-        },
-        variables: { userId },
-      });
+          variables: { userId },
+        });
     },
   });
 
@@ -73,23 +81,29 @@ const Publications = () => {
     setOpenModal(!openModal);
   };
 
+  if (loading) {
+    return (
+      <div className={styles.loaderContainer}>
+        <CircularProgress />
+      </div>
+    );
+  }
+
   return (
     <div>
-      {!loading && (
-        <div>
-          <div className={styles.wrapper}>
-            <h1>Публикации пользователя</h1>
-            <Button
-              onClick={handleModal}
-              className={styles.addPublicationButton}
-              variant="contained"
-            >
-              Добавить публикацию
-            </Button>
-          </div>
-          <PublicationsList publications={data?.user?.posts?.data} />
+      <div>
+        <div className={styles.wrapper}>
+          <h1>Публикации пользователя:</h1>
+          <Button
+            onClick={handleModal}
+            className={styles.addPublicationButton}
+            variant="contained"
+          >
+            Добавить публикацию
+          </Button>
         </div>
-      )}
+        <PublicationsList publications={data?.user?.posts?.data} />
+      </div>
       <Modal
         open={openModal}
         onClose={handleModal}
@@ -116,5 +130,3 @@ const Publications = () => {
     </div>
   );
 };
-
-export default Publications;

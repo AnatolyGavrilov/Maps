@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Users from "./pages/Users/Users";
-import Publications from "./pages/Publications/Publications";
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { Publications } from "pages/Publications/Publications";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
