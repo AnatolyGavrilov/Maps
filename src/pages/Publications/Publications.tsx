@@ -1,33 +1,42 @@
-import { Box, Button, Modal, Typography } from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import PublicationsList from "modules/Publications/components/PublicationsList/PublicationsList";
-import { useState } from "react";
+import { ChangeEvent, FormEvent, FormEventHandler, useState } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./styles.module.scss";
 import {
   GET_PUBLICATIONS,
   ADD_PUBLICATION,
 } from "api/publications/publications";
-import { useMutation, useQuery } from "@apollo/client";
+import {
+  ApolloCache,
+  DefaultContext,
+  MutationUpdaterFunction,
+  OperationVariables,
+  useMutation,
+  useQuery,
+} from "@apollo/client";
 import { MuiSxStyle } from "./MuiSxStyles";
+import { IPublicationsCache } from "./Publications.types";
 
 const Publications = () => {
-  const [open, setOpen] = useState<boolean>(false);
-  const handleClose = () => setOpen(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [body, setBody] = useState<string>("");
-  const titleHandler = (e: any) => {
+
+  const titleHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e?.target?.value);
   };
-  const bodyHandler = (e: any) => {
+  const bodyHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setBody(e?.target?.value);
   };
+
   const { userId } = useParams();
   const { loading, error, data } = useQuery(GET_PUBLICATIONS, {
     variables: { userId },
   });
-  const sendForm = (e: any) => {
+
+  function sendForm(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(title, body);
     addPublication({
       variables: {
         input: {
@@ -36,19 +45,22 @@ const Publications = () => {
         },
       },
     });
-  };
+    handleModal();
+  }
+
   const [addPublication] = useMutation(ADD_PUBLICATION, {
-    update(cache: any, { data: { createPost } }: any) {
-      const publicationsCache = cache.readQuery({
+    update(cache: ApolloCache<IPublicationsCache | null>, { data: { createPost } }) {
+      const publicationsCache: IPublicationsCache | null = cache.readQuery({
         query: GET_PUBLICATIONS,
         variables: { userId },
       });
-      cache.writeQuery({
+      console.log("publicationsCache", publicationsCache);
+      publicationsCache && cache.writeQuery({
         query: GET_PUBLICATIONS,
         data: {
           user: {
             posts: {
-              data: [createPost, ...publicationsCache.user.posts.data],
+              data: [createPost, ...publicationsCache?.user.posts.data],
             },
           },
         },
@@ -56,10 +68,11 @@ const Publications = () => {
       });
     },
   });
-  console.log(data);
-  const handleOpen = () => {
-    setOpen(true);
+
+  const handleModal = () => {
+    setOpenModal(!openModal);
   };
+
   return (
     <div>
       {!loading && (
@@ -67,7 +80,7 @@ const Publications = () => {
           <div className={styles.wrapper}>
             <h1>Публикации пользователя</h1>
             <Button
-              onClick={handleOpen}
+              onClick={handleModal}
               className={styles.addPublicationButton}
               variant="contained"
             >
@@ -78,8 +91,8 @@ const Publications = () => {
         </div>
       )}
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={openModal}
+        onClose={handleModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

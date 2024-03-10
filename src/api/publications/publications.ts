@@ -6,6 +6,7 @@ export const GET_PUBLICATIONS = gql`
       posts {
         data {
           id
+          body
           title
         }
       }

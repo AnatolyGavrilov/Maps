@@ -26,6 +26,13 @@ const PublicationsList: FC<IPublicationsProps> = ({ publications }) => {
               >
                 {publication.title}
               </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                className={styles.title}
+              >
+                {publication.body}
+              </Typography>
             </CardContent>
             <CardActions>
               <Button size="small">Редактировать</Button>
