@@ -15,8 +15,8 @@ const PublicationsList: FC<IPublicationsProps> = ({ publications }) => {
   return (
     <div>
       <div className={styles.cardsList}>
-        {publications.map((publication, index) => (
-          <Card sx={{ maxWidth: 345 }} key={index}>
+        {publications.map((publication) => (
+          <Card sx={{ maxWidth: 345 }} key={publication.id}>
             <img className={styles.image} src={cardImage} alt="mountins" />
             <CardContent>
               <Typography

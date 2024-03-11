@@ -15,11 +15,15 @@ export interface IPublicationsCache {
 interface ICreatePost {
   id: string;
   body: string;
-  string: string;
+  title: string;
 }
-interface ICreatePostResponse {
+export interface ICreatePostResponse {
   createPost: ICreatePost;
 }
-export interface IDataForCacheUpdate {
-  data: ICreatePostResponse;
+
+export interface IVariables {
+  input: {
+    title: string;
+    body: string;
+  };
 }

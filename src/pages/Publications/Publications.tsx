@@ -9,12 +9,17 @@ import {
 } from "api/publications/publications";
 import {
   ApolloCache,
+  DefaultContext,
   FetchResult,
   useMutation,
   useQuery,
 } from "@apollo/client";
 import { MuiSxStyle } from "./MuiSxStyles";
-import { IPublicationsCache } from "./Publications.types";
+import {
+  ICreatePostResponse,
+  IPublicationsCache,
+  IVariables,
+} from "./Publications.types";
 import CircularProgress from "@mui/material/CircularProgress";
 export const Publications: FC = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -48,18 +53,15 @@ export const Publications: FC = () => {
     handleModal();
   };
 
-  const [addPublication] = useMutation(ADD_PUBLICATION, {
-    update(
-      cache: ApolloCache<IPublicationsCache | null>,
-      {
-        data: { createPost },
-      }: Omit<
-        FetchResult<any, Record<string, any>, Record<string, any>>,
-        "context"
-      >
-    ) {
-      console.log("createPost", createPost);
-      const publicationsCache: IPublicationsCache | null = cache.readQuery({
+  const [addPublication] = useMutation<
+    ICreatePostResponse,
+    IVariables,
+    DefaultContext,
+    ApolloCache<IPublicationsCache>
+  >(ADD_PUBLICATION, {
+    update(cache, { data }) {
+      console.log("createPost", data?.createPost);
+      const publicationsCache = cache.readQuery<IPublicationsCache>({
         query: GET_PUBLICATIONS,
         variables: { userId },
       });
@@ -70,7 +72,7 @@ export const Publications: FC = () => {
             user: {
               posts: {
                 data: [
-                  { ...createPost, id: Math.random() * 10 },
+                  { ...data?.createPost, id: Math.random() * 10 },
                   ...publicationsCache?.user.posts.data,
                 ],
               },
