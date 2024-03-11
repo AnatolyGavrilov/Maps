@@ -58,6 +58,7 @@ export const Publications: FC = () => {
         "context"
       >
     ) {
+      console.log("createPost", createPost);
       const publicationsCache: IPublicationsCache | null = cache.readQuery({
         query: GET_PUBLICATIONS,
         variables: { userId },
@@ -68,7 +69,10 @@ export const Publications: FC = () => {
           data: {
             user: {
               posts: {
-                data: [createPost, ...publicationsCache?.user.posts.data],
+                data: [
+                  { ...createPost, id: Math.random() * 10 },
+                  ...publicationsCache?.user.posts.data,
+                ],
               },
             },
           },
