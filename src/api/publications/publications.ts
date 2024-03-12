@@ -23,3 +23,13 @@ export const ADD_PUBLICATION = gql`
     }
   }
 `;
+
+export const UPDATE_PUBLICATION = gql`
+  mutation ($id: ID!, $input: UpdatePostInput!) {
+    updatePost(id: $id, input: $input) {
+      id
+      title
+      body
+    }
+  }
+`;

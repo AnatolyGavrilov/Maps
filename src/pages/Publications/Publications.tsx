@@ -1,8 +1,7 @@
-import { Box, Button, Modal } from "@mui/material";
+import { Button, Modal } from "@mui/material";
 import PublicationsList from "modules/Publications/components/PublicationsList/PublicationsList";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useParams } from "react-router-dom";
-import styles from "./styles.module.scss";
 import {
   GET_PUBLICATIONS,
   ADD_PUBLICATION,
@@ -10,21 +9,20 @@ import {
 import {
   ApolloCache,
   DefaultContext,
-  FetchResult,
   useMutation,
   useQuery,
 } from "@apollo/client";
-import { MuiSxStyle } from "./MuiSxStyles";
 import {
   ICreatePostResponse,
   IPublicationsCache,
   IVariables,
 } from "./Publications.types";
 import CircularProgress from "@mui/material/CircularProgress";
+import styles from "./styles.module.scss";
 export const Publications: FC = () => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>("");
-  const [body, setBody] = useState<string>("");
+  const [openModal, setOpenModal] = useState(false);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
 
   const titleHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e?.target?.value);
@@ -60,7 +58,6 @@ export const Publications: FC = () => {
     ApolloCache<IPublicationsCache>
   >(ADD_PUBLICATION, {
     update(cache, { data }) {
-      console.log("createPost", data?.createPost);
       const publicationsCache = cache.readQuery<IPublicationsCache>({
         query: GET_PUBLICATIONS,
         variables: { userId },
@@ -72,6 +69,8 @@ export const Publications: FC = () => {
             user: {
               posts: {
                 data: [
+                  //  id: Math.random() * 10 ---> Добавлено т.к бэк при создании новой сущнсоти всегда возвращает один и тот же id,
+                  // при этом не дает прокинуть id.
                   { ...data?.createPost, id: Math.random() * 10 },
                   ...publicationsCache?.user.posts.data,
                 ],
@@ -110,13 +109,8 @@ export const Publications: FC = () => {
         </div>
         <PublicationsList publications={data?.user?.posts?.data} />
       </div>
-      <Modal
-        open={openModal}
-        onClose={handleModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={MuiSxStyle}>
+      <Modal open={openModal} onClose={handleModal}>
+        <div className={styles.formWrapper}>
           <form onSubmit={sendForm}>
             <p>Создать публикацию</p>
             <input
@@ -131,7 +125,7 @@ export const Publications: FC = () => {
             ></input>
             <button className={styles.formButton}>Создать</button>
           </form>
-        </Box>
+        </div>
       </Modal>
     </div>
   );
