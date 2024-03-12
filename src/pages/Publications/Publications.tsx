@@ -110,7 +110,7 @@ export const Publications: FC = () => {
         <PublicationsList publications={data?.user?.posts?.data} />
       </div>
       <Modal open={openModal} onClose={handleModal}>
-        <div className={styles.formWrapper}>
+        <div className={styles.modal}>
           <form onSubmit={sendForm}>
             <p>Создать публикацию</p>
             <input

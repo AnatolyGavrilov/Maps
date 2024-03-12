@@ -33,3 +33,9 @@ export const UPDATE_PUBLICATION = gql`
     }
   }
 `;
+
+export const DELETE_PUBLICATION = gql`
+  mutation ($id: ID!) {
+    deletePost(id: $id)
+  }
+`;

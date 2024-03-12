@@ -11,11 +11,15 @@ import {
   Typography,
 } from "@mui/material";
 import { useMutation } from "@apollo/client";
-import { UPDATE_PUBLICATION } from "api/publications/publications";
+import {
+  DELETE_PUBLICATION,
+  UPDATE_PUBLICATION,
+} from "api/publications/publications";
 
 const PublicationsList: FC<any> = ({ publication }) => {
   const [openModal, setOpenModal] = useState(false);
-  const [updatePost, { data }] = useMutation(UPDATE_PUBLICATION);
+  const [updatePost] = useMutation(UPDATE_PUBLICATION);
+  const [deletePost, { data }] = useMutation(DELETE_PUBLICATION);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const titleHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -29,20 +33,28 @@ const PublicationsList: FC<any> = ({ publication }) => {
     setOpenModal(!openModal);
   };
 
-  const sendForm = (publicationId: string, e: FormEvent<HTMLFormElement>) => {
-    console.log("id", publicationId);
+  const sendForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     updatePost({
       variables: {
-        id: publicationId,
+        id: publication.id,
         input: { title: title, body: body },
       },
     });
     handleModal();
   };
 
+  const handleClickToDeletePost = () => {
+    deletePost({
+      variables: {
+        id: publication.id,
+      },
+    });
+    console.log("deletedData", data);
+  };
+  // console.log("puclication id ", publication.id);
   return (
-    <Card sx={{ maxWidth: 345 }} key={publication.id}>
+    <Card sx={{ maxWidth: 345 }}>
       <img className={styles.image} src={cardImage} alt="mountins" />
       <CardContent>
         <Typography
@@ -64,12 +76,14 @@ const PublicationsList: FC<any> = ({ publication }) => {
         <Button size="small" onClick={handleModal}>
           Редактировать
         </Button>
-        <Button size="small">Удалить</Button>
+        <Button size="small" onClick={handleClickToDeletePost}>
+          Удалить
+        </Button>
       </CardActions>
       <Modal open={openModal} onClose={handleModal}>
-        <div className={styles.formWrapper}>
-          <form onSubmit={(e) => sendForm(publication.id, e)}>
-            <p>Создать публикацию</p>
+        <div className={styles.modal}>
+          <form onSubmit={sendForm}>
+            <p>Редактировать публикацию</p>
             <input
               value={title}
               onChange={titleHandler}
@@ -80,7 +94,7 @@ const PublicationsList: FC<any> = ({ publication }) => {
               onChange={bodyHandler}
               className={styles.bodyField}
             ></input>
-            <button className={styles.formButton}>Создать</button>
+            <button className={styles.formButton}>Редактировать</button>
           </form>
         </div>
       </Modal>
