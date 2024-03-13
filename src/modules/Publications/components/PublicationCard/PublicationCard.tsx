@@ -13,13 +13,45 @@ import {
 import { useMutation } from "@apollo/client";
 import {
   DELETE_PUBLICATION,
+  GET_PUBLICATIONS,
   UPDATE_PUBLICATION,
 } from "api/publications/publications";
+import { IPublicationsCache } from "pages/Publications/Publications.types";
 
-const PublicationsList: FC<any> = ({ publication }) => {
+const PublicationsList: FC<any> = ({ publication, userId }) => {
   const [openModal, setOpenModal] = useState(false);
   const [updatePost] = useMutation(UPDATE_PUBLICATION);
-  const [deletePost, { data }] = useMutation(DELETE_PUBLICATION);
+  // console.log("userId", userId);
+  // console.log("publicationId", publication.id);
+  const [deletePublication] = useMutation(DELETE_PUBLICATION, {
+    update(cache) {
+      const publicationsCache = cache.readQuery<IPublicationsCache>({
+        query: GET_PUBLICATIONS,
+        variables: { userId },
+      });
+      console.log("publicationId", publication.id);
+      const test = publicationsCache?.user.posts.data.filter(
+        (curr) => curr.id !== publication.id
+      );
+      console.log("filtered", test);
+      publicationsCache &&
+        cache.writeQuery({
+          query: GET_PUBLICATIONS,
+          data: {
+            user: {
+              posts: {
+                data: [
+                  ...publicationsCache?.user.posts.data.filter(
+                    (curr) => curr.id !== publication.id
+                  ),
+                ],
+              },
+            },
+          },
+          variables: { userId },
+        });
+    },
+  });
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const titleHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -44,15 +76,14 @@ const PublicationsList: FC<any> = ({ publication }) => {
     handleModal();
   };
 
-  const handleClickToDeletePost = () => {
-    deletePost({
+  const handleClickToDeletePost = async () => {
+    await deletePublication({
       variables: {
         id: publication.id,
       },
     });
-    console.log("deletedData", data);
   };
-  // console.log("puclication id ", publication.id);
+  // console.log(data);
   return (
     <Card sx={{ maxWidth: 345 }}>
       <img className={styles.image} src={cardImage} alt="mountins" />

@@ -107,7 +107,10 @@ export const Publications: FC = () => {
             Добавить публикацию
           </Button>
         </div>
-        <PublicationsList publications={data?.user?.posts?.data} />
+        <PublicationsList
+          publications={data?.user?.posts?.data}
+          userId={userId}
+        />
       </div>
       <Modal open={openModal} onClose={handleModal}>
         <div className={styles.modal}>
