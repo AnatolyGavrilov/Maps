@@ -1,4 +1,4 @@
-import { Button, Modal } from "@mui/material";
+import { Button, Modal, TextField } from "@mui/material";
 import PublicationsList from "modules/Publications/components/PublicationsList/PublicationsList";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -49,6 +49,8 @@ export const Publications: FC = () => {
       },
     });
     handleModal();
+    setTitle("");
+    setBody("");
   };
 
   const [addPublication] = useMutation<
@@ -69,7 +71,7 @@ export const Publications: FC = () => {
             user: {
               posts: {
                 data: [
-                  //  id: Math.random() * 10 ---> Добавлено т.к бэк при создании новой сущнсоти всегда возвращает один и тот же id,
+                  //  id: Math.random() * 10 ---> Добавлено т.к бэк при создании новой сущности всегда возвращает один и тот же id,
                   // при этом не дает прокинуть id.
                   { ...data?.createPost, id: Math.random() * 10 },
                   ...publicationsCache?.user.posts.data,
@@ -104,7 +106,7 @@ export const Publications: FC = () => {
             className={styles.addPublicationButton}
             variant="contained"
           >
-            Добавить публикацию
+            Создать публикацию
           </Button>
         </div>
         <PublicationsList
@@ -115,18 +117,28 @@ export const Publications: FC = () => {
       <Modal open={openModal} onClose={handleModal}>
         <div className={styles.modal}>
           <form onSubmit={sendForm}>
-            <p>Создать публикацию</p>
-            <input
-              value={title}
-              onChange={titleHandler}
-              className={styles.titleField}
-            ></input>
-            <input
-              value={body}
-              onChange={bodyHandler}
-              className={styles.bodyField}
-            ></input>
-            <button className={styles.formButton}>Создать</button>
+            <p className={styles.modalTitle}>Создание публикации</p>
+            <div className={styles.fields}>
+              <TextField
+                value={title}
+                onChange={titleHandler}
+                label="Введите название"
+                variant="outlined"
+              />
+              <TextField
+                value={body}
+                onChange={bodyHandler}
+                label="Введите контент"
+                variant="outlined"
+              />
+            </div>
+            <Button
+              type="submit"
+              className={styles.changePublicationButton}
+              variant="contained"
+            >
+              Создать
+            </Button>
           </form>
         </div>
       </Modal>

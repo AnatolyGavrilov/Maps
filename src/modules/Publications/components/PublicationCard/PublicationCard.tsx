@@ -1,13 +1,14 @@
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import styles from "./styles.module.scss";
 
-import cardImage from "../../../../assets/images/like.jpg";
+import cardImage from "assets/images/like.jpg";
 import {
   Button,
   Card,
   CardActions,
   CardContent,
   Modal,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useMutation } from "@apollo/client";
@@ -20,20 +21,17 @@ import { IPublicationsCache } from "pages/Publications/Publications.types";
 
 const PublicationsList: FC<any> = ({ publication, userId }) => {
   const [openModal, setOpenModal] = useState(false);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+
   const [updatePost] = useMutation(UPDATE_PUBLICATION);
-  // console.log("userId", userId);
-  // console.log("publicationId", publication.id);
   const [deletePublication] = useMutation(DELETE_PUBLICATION, {
     update(cache) {
       const publicationsCache = cache.readQuery<IPublicationsCache>({
         query: GET_PUBLICATIONS,
         variables: { userId },
       });
-      console.log("publicationId", publication.id);
-      const test = publicationsCache?.user.posts.data.filter(
-        (curr) => curr.id !== publication.id
-      );
-      console.log("filtered", test);
+
       publicationsCache &&
         cache.writeQuery({
           query: GET_PUBLICATIONS,
@@ -52,8 +50,7 @@ const PublicationsList: FC<any> = ({ publication, userId }) => {
         });
     },
   });
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+
   const titleHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e?.target?.value);
   };
@@ -66,6 +63,7 @@ const PublicationsList: FC<any> = ({ publication, userId }) => {
   };
 
   const sendForm = (e: FormEvent<HTMLFormElement>) => {
+    console.log("я зашел 1 раз");
     e.preventDefault();
     updatePost({
       variables: {
@@ -74,6 +72,8 @@ const PublicationsList: FC<any> = ({ publication, userId }) => {
       },
     });
     handleModal();
+    setTitle("");
+    setBody("");
   };
 
   const handleClickToDeletePost = async () => {
@@ -83,9 +83,9 @@ const PublicationsList: FC<any> = ({ publication, userId }) => {
       },
     });
   };
-  // console.log(data);
+
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card className={styles.card}>
       <img className={styles.image} src={cardImage} alt="mountins" />
       <CardContent>
         <Typography
@@ -98,7 +98,7 @@ const PublicationsList: FC<any> = ({ publication, userId }) => {
         <Typography
           variant="body2"
           color="text.secondary"
-          className={styles.title}
+          className={styles.body}
         >
           {publication.body}
         </Typography>
@@ -114,18 +114,28 @@ const PublicationsList: FC<any> = ({ publication, userId }) => {
       <Modal open={openModal} onClose={handleModal}>
         <div className={styles.modal}>
           <form onSubmit={sendForm}>
-            <p>Редактировать публикацию</p>
-            <input
-              value={title}
-              onChange={titleHandler}
-              className={styles.titleField}
-            ></input>
-            <input
-              value={body}
-              onChange={bodyHandler}
-              className={styles.bodyField}
-            ></input>
-            <button className={styles.formButton}>Редактировать</button>
+            <p className={styles.modalTitle}>Изменение публикации</p>
+            <div className={styles.fields}>
+              <TextField
+                value={title}
+                onChange={titleHandler}
+                label="Введите название"
+                variant="outlined"
+              />
+              <TextField
+                value={body}
+                onChange={bodyHandler}
+                label="Введите контент"
+                variant="outlined"
+              />
+            </div>
+            <Button
+              type="submit"
+              className={styles.changePublicationButton}
+              variant="contained"
+            >
+              Изменить
+            </Button>
           </form>
         </div>
       </Modal>
