@@ -86,7 +86,7 @@ export const Publications: FC = () => {
   });
 
   const handleModal = () => {
-    setOpenModal(!openModal);
+    setOpenModal((prev) => !prev);
   };
 
   if (loading) {

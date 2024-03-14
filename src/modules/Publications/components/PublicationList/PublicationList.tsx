@@ -9,16 +9,14 @@ export const PublicationList: FC<IPublicationsProps> = ({
   userId,
 }) => {
   return (
-    <div>
-      <div className={styles.cardsList}>
-        {publications.map((publication) => (
-          <PublicationCard
-            key={publication.id}
-            publication={publication}
-            userId={userId}
-          />
-        ))}
-      </div>
+    <div className={styles.cardsList}>
+      {publications.map((publication) => (
+        <PublicationCard
+          key={publication.id}
+          publication={publication}
+          userId={userId}
+        />
+      ))}
     </div>
   );
 };

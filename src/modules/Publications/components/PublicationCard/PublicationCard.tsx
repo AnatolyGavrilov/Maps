@@ -18,8 +18,12 @@ import {
   UPDATE_PUBLICATION,
 } from "api/publications/publications";
 import { IPublicationsCache } from "pages/Publications/Publications.types";
+import { IPublicationCardProps } from "./PublicationCard.types";
 
-export const PublicationCard: FC<any> = ({ publication, userId }) => {
+export const PublicationCard: FC<IPublicationCardProps> = ({
+  publication,
+  userId,
+}) => {
   const [openModal, setOpenModal] = useState(false);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -59,7 +63,7 @@ export const PublicationCard: FC<any> = ({ publication, userId }) => {
     setBody(e?.target?.value);
   };
   const handleModal = () => {
-    setOpenModal(!openModal);
+    setOpenModal((prev) => !prev);
   };
 
   const sendForm = (e: FormEvent<HTMLFormElement>) => {
