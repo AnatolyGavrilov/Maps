@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import styles from "./styles.module.scss";
 
-import cardImage from "assets/images/like.jpg";
+import cardImage from "assets/images/mountains.jpg";
 import {
   Button,
   Card,
@@ -19,7 +19,7 @@ import {
 } from "api/publications/publications";
 import { IPublicationsCache } from "pages/Publications/Publications.types";
 
-const PublicationsList: FC<any> = ({ publication, userId }) => {
+export const PublicationCard: FC<any> = ({ publication, userId }) => {
   const [openModal, setOpenModal] = useState(false);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -63,7 +63,6 @@ const PublicationsList: FC<any> = ({ publication, userId }) => {
   };
 
   const sendForm = (e: FormEvent<HTMLFormElement>) => {
-    console.log("я зашел 1 раз");
     e.preventDefault();
     updatePost({
       variables: {
@@ -142,5 +141,3 @@ const PublicationsList: FC<any> = ({ publication, userId }) => {
     </Card>
   );
 };
-
-export default PublicationsList;

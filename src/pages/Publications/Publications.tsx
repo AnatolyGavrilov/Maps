@@ -1,5 +1,4 @@
 import { Button, Modal, TextField } from "@mui/material";
-import PublicationsList from "modules/Publications/components/PublicationsList/PublicationsList";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -18,7 +17,9 @@ import {
   IVariables,
 } from "./Publications.types";
 import CircularProgress from "@mui/material/CircularProgress";
+
 import styles from "./styles.module.scss";
+import { PublicationList } from "modules/Publications/components/PublicationList";
 export const Publications: FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [title, setTitle] = useState("");
@@ -109,7 +110,7 @@ export const Publications: FC = () => {
             Создать публикацию
           </Button>
         </div>
-        <PublicationsList
+        <PublicationList
           publications={data?.user?.posts?.data}
           userId={userId}
         />

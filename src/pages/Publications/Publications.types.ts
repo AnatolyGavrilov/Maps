@@ -21,9 +21,11 @@ export interface ICreatePostResponse {
   createPost: ICreatePost;
 }
 
+export interface IInput {
+  title: string;
+  body: string;
+}
+
 export interface IVariables {
-  input: {
-    title: string;
-    body: string;
-  };
+  input: IInput;
 }

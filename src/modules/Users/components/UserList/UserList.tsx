@@ -6,7 +6,7 @@ import { ListItemText } from "@mui/material";
 import styles from "./styles.module.scss";
 import { useNavigate } from "react-router-dom";
 
-const UserList: FC<IUserListProps> = ({ users }) => {
+export const UsersList: FC<IUserListProps> = ({ users }) => {
   const navigate = useNavigate();
 
   const handleClickNavigateToPublications = (id: string) => {
@@ -45,4 +45,3 @@ const UserList: FC<IUserListProps> = ({ users }) => {
   );
 };
 
-export default UserList;

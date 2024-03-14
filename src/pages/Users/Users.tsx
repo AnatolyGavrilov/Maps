@@ -1,14 +1,14 @@
 import { FormControlLabel, Switch } from "@mui/material";
-import UserList from "modules/Users/components/UsersList/UsersList";
-import UsersMap from "modules/Users/components/UsersMap/UsersMap";
+
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_USERS } from "api/users/users";
+import { UsersList } from "modules/Users/components/UserList";
+import { UserMap } from "modules/Users/components/UserMap";
 
 const Users = () => {
-  const [isMap, setIsMap] = useState<boolean>(false);
+  const [isMap, setIsMap] = useState(false);
   const { loading, data } = useQuery(GET_USERS);
-  const users = data?.users?.data;
   const handleClickToSwitch = () => {
     setIsMap(!isMap);
   };
@@ -24,7 +24,11 @@ const Users = () => {
             label={FormControlLabelValue}
             onClick={handleClickToSwitch}
           />
-          {isMap ? <UsersMap users={users} /> : <UserList users={users} />}
+          {isMap ? (
+            <UserMap users={data?.users?.data} />
+          ) : (
+            <UsersList users={data?.users?.data} />
+          )}
         </div>
       )}
     </div>

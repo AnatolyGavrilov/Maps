@@ -27,7 +27,3 @@ export interface IUser {
   wesite: string;
   company: ICompany;
 }
-
-export interface IUsersInitialState {
-  users: IUser[];
-}

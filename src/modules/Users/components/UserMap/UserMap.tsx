@@ -1,10 +1,9 @@
 import { FC } from "react";
-import { renderToString } from "react-dom/server";
 import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
-import { IUserMapProps } from "./UsersMap.types";
+import { IUserMapProps } from "./UserMap.types";
 import styles from "./styles.module.scss";
 
-const UsersMap: FC<IUserMapProps> = ({ users }) => {
+export const UserMap: FC<IUserMapProps> = ({ users }) => {
   const defaultState = {
     center: [55.751574, 37.573856],
     zoom: 5,
@@ -26,5 +25,3 @@ const UsersMap: FC<IUserMapProps> = ({ users }) => {
     </div>
   );
 };
-
-export default UsersMap;
